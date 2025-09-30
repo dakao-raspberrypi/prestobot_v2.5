@@ -1,0 +1,33 @@
+<launch>
+    <!-- <let name="rviz_config_path" value="$(find-pkg-share prestobot_bringup)/rviz/slam_config.rviz" />
+
+    <include file="$(find-pkg-share prestobot_description)/launch/robot_description.launch.xml" />
+    <include file="$(find-pkg-share prestobot_controller)/launch/ros2_control.launch.py" />
+    <include file="$(find-pkg-share prestobot_simulation)/launch/gazebo.launch.xml" />
+
+    <include file="$(find-pkg-share nav2_bringup)/launch/navigation_launch.py" >
+        <arg name="use_sim_time" value="true" />
+    </include>
+
+    <include file="$(find-pkg-share slam_toolbox)/launch/online_async_launch.py" >
+        <arg name="use_sim_time" value="true" />
+    </include>
+
+    <node pkg="rviz2" exec="rviz2" output="screen" args="-d $(var rviz_config_path)" /> -->
+
+    <arg name="lidar_port" default="/dev/ttyUSB0" />
+    <arg name="arduino_port" default="/dev/ttyUSB1" />
+
+    <include file="$(find-pkg-share prestobot_description)/launch/robot_description.launch.xml" >
+        <arg name="port" value="$(var arduino_port)" />
+    </include>
+    <include file="$(find-pkg-share prestobot_controller)/launch/ros2_control.launch.py" />
+    <include file="$(find-pkg-share sllidar_ros2)/launch/sllidar_c1_launch.py" >
+        <arg name="serial_port" value="$(var lidar_port)" />
+        <arg name="frame_id" value="base_scan" />
+    </include>
+    <node pkg="prestobot_py_pkg" exec="mpu6050_driver" />
+    <include file="$(find-pkg-share nav2_bringup)/launch/navigation_launch.py" />
+    <include file="$(find-pkg-share slam_toolbox)/launch/online_async_launch.py" />
+
+</launch>

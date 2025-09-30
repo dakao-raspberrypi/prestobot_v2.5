@@ -1,0 +1,18 @@
+<launch>
+    <arg name="lidar_port" default="/dev/ttyUSB0" />
+    <arg name="arduino_port" default="/dev/ttyUSB1" />
+
+    <include file="$(find-pkg-share prestobot_description)/launch/robot_description.launch.xml" >
+        <arg name="port" value="$(var arduino_port)" />
+    </include>
+    <include file="$(find-pkg-share prestobot_controller)/launch/ros2_control.launch.py" />
+    <include file="$(find-pkg-share sllidar_ros2)/launch/sllidar_c1_launch.py" >
+        <arg name="serial_port" value="$(var lidar_port)" />
+        <arg name="frame_id" value="base_scan" />
+    </include>
+    <node pkg="prestobot_py_pkg" exec="mpu6050_driver" />
+    <!-- <include file="$(find-pkg-share nav2_bringup)/launch/bringup_launch.py" >
+        <arg name="map" value="~/maps/LR001.yaml" />
+    </include> -->
+    <include file="$(find-pkg-share prestobot_navigation)/launch/navigation.launch.xml" />
+</launch>
